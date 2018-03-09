@@ -3,6 +3,12 @@ package morphling
 import (
 	"database/sql"
 )
+
+var(
+	MySQLDriver = "mysql"
+)
+
+
 // morphling is logical database object with main as master physical database
 // and replica as slave database with load balancer
 type morphling struct {
