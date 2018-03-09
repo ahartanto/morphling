@@ -9,44 +9,44 @@ var(
 )
 
 
-// morphling is logical database object with main as master physical database
+// Morphling is logical database object with main as master physical database
 // and replica as slave database with load balancer
-type morphling struct {
-	Main *sql.DB
-	Replica *sql.DB
+type Morphling struct {
+	main *sql.DB
+	replica *sql.DB
 }
 
 // Open opens master and slave database connection
-func Open(driverName, dataSourceMainStr, dataSourceReplicaStr string) (*morphling ,error) {
-	morphling := morphling{}
+func Open(driverName, dataSourceMainStr, dataSourceReplicaStr string) (*Morphling ,error) {
+	Morphling := Morphling{}
 
 	dbMain, err := sql.Open(driverName, dataSourceMainStr)
 	if err != nil {
 		return nil, err
 	}
-	morphling.Main = dbMain
+	Morphling.main = dbMain
 
 	dbReplica, err := sql.Open(driverName, dataSourceReplicaStr)
 	if err != nil {
 		return nil, err
 	}
-	morphling.Replica = dbReplica
+	Morphling.replica = dbReplica
 
-	return &morphling, nil
+	return &Morphling, nil
 }
 
 // Close closes all database, releasing any open resources.
 //
 // It is rare to Close a DB, as the DB handle is meant to be
 // long-lived and shared between many goroutines.
-func (m *morphling) Close () error {
+func (m *Morphling) Close () error {
 
-	err := m.Main.Close()
+	err := m.main.Close()
 	if err != nil {
 		return err
 	}
 
-	err = m.Replica.Close()
+	err = m.replica.Close()
 	if err != nil {
 		return err
 	}
@@ -56,13 +56,13 @@ func (m *morphling) Close () error {
 
 // Ping verifies connection to all database is still alive,
 // establishing a connection if necessary.
-func (m *morphling) Ping () error{
-	err := m.Main.Ping()
+func (m *Morphling) Ping () error{
+	err := m.main.Ping()
 	if err != nil {
 		return err
 	}
 
-	err = m.Replica.Ping()
+	err = m.replica.Ping()
 	if err != nil {
 		return err
 	}
@@ -73,20 +73,20 @@ func (m *morphling) Ping () error{
 // QueryRow executes a query that is expected to return at most one row.
 // QueryRow always returns a non-nil value. Errors are deferred until
 // Row's Scan method is called.
-func (m *morphling) QueryRow (query string, args ...interface{}) *sql.Row{
-	return m.Replica.QueryRow(query, args)
+func (m *Morphling) QueryRow (query string, args ...interface{}) *sql.Row{
+	return m.replica.QueryRow(query, args)
 }
 
 // Query executes a query that returns rows, typically a SELECT.
 // The args are for any placeholder parameters in the query.
-func (m *morphling) Query (query string, args ...interface{}) (*sql.Rows, error){
-	return m.Replica.Query(query, args)
+func (m *Morphling) Query (query string, args ...interface{}) (*sql.Rows, error){
+	return m.replica.Query(query, args)
 }
 
 // Exec executes a query without returning any rows.
 // The args are for any placeholder parameters in the query.
-func (m *morphling) Exec (query string, args ...interface{}) (sql.Result, error){
-	return m.Main.Exec(query, args)
+func (m *Morphling) Exec (query string, args ...interface{}) (sql.Result, error){
+	return m.main.Exec(query, args)
 }
 
 // Prepare creates a prepared statement for later queries or executions.
@@ -94,12 +94,12 @@ func (m *morphling) Exec (query string, args ...interface{}) (sql.Result, error)
 // returned statement.
 // The caller must call the statement's Close method
 // when the statement is no longer needed.
-func (m *morphling) Prepare (query string) (*sql.Stmt, error){
-	return m.Main.Prepare(query)
+func (m *Morphling) Prepare (query string) (*sql.Stmt, error){
+	return m.main.Prepare(query)
 }
 
 // Begin starts a transaction. The default isolation level is dependent on
 // the driver.
-func (m *morphling) Begin (query string) (*sql.Tx, error){
-	return m.Main.Begin()
+func (m *Morphling) Begin (query string) (*sql.Tx, error){
+	return m.main.Begin()
 }
