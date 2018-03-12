@@ -1,7 +1,6 @@
 sudo: false
 language: go
 script:
-  - cd morphling
   - go test -race
 go:
   - 1.6.x
