@@ -2,7 +2,13 @@
 Morphling is a SQL wrapper for database replication topology. Morphling helps you to determine which connection to be
 used when execute query to the sql database. **It's not an ORM**
 
+**Why you need morphling ?**
+Golang sql package is allowed you to open multiple connection, but without any restriction, means any connection you
+opened, can do all SQL manipulation (`insert`, `update`, `delete`, `select`), While slave database supposed to be only
+allowed to do `select` , with morphling it manage the master slave connection usage.
 
+**Why morphling can only specify one replica ?** We can use load balancer such as HAProxy or else to handle a replica
+set, its provide abstraction to how you want to handle your replica sets load, either round robin or else.
 
 #### Example
 
@@ -40,7 +46,7 @@ func main() {
     // Get database handler
     db, err := morphling.OpenConnection(morphling.MySQLDriver, dataSourceMaster, dataSourceSlave)
     if err != nil {
-        panic(fmt.Errorf("failed dial database slave : %v", err))
+        panic(fmt.Errorf("failed dial database : %v", err))
     }
 
     // Then you can do the query as golang sql package does
@@ -51,3 +57,11 @@ func main() {
 
 }
 ```
+
+# About
+
+Fun fact, *Morphling* is a ranged agility **dota** hero that has many flexible abilities. His ultimate, Morph,
+transforms him into a copy of an enemy using their stats and basic abilities.
+
+Morphling can be as an analogy of database replication, `select / read` data is a basic abilites that replica has,
+while `insert`, `update` and `delete` is the main abilites.
