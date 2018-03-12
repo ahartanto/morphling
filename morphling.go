@@ -9,10 +9,15 @@ var (
 	MySQLDriver = "mysql"
 )
 
-// Morphling is logical database object with main as master physical database
-// and replica as slave database with load balancer
+// DB is logical database object with main as master physical database
+// and replica as slave database with loadbalancer
 type DB struct {
+	// main is master physical database
 	main    *sql.DB
+
+	// replica can be a slave physical database, but for more than 1 slave replica
+	// you can put loadbalancer on top of your replica sets that handle the load
+	// distribution, which can be round robin or others
 	replica *sql.DB
 }
 
