@@ -1,4 +1,4 @@
-# Morphling [![Build Status](https://travis-ci.org/ahartanto/morphling.svg?branch=master)](https://travis-ci.org/ahartanto/morphling) [![GoDoc](https://godoc.org/github.com/ahartanto/morphling?status.svg)](https://godoc.org/github.com/ahartanto/morphling)
+# <img src="https://d1u5p3l4wpay3k.cloudfront.net/dota2_gamepedia/7/7b/Morphling_icon.png?version=e3fb6a35e9420dff83b5bcf3015a816c" width="40" height="40" alt=":morphling:" class="emoji" title=":morphling:"/> Morphling [![Build Status](https://travis-ci.org/ahartanto/morphling.svg?branch=master)](https://travis-ci.org/ahartanto/morphling) [![GoDoc](https://godoc.org/github.com/ahartanto/morphling?status.svg)](https://godoc.org/github.com/ahartanto/morphling)
 
 Morphling is a SQL wrapper for database replication topology. Morphling helps you to determine which connection to be
 used when execute query to the sql database. **It's not an ORM**
