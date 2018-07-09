@@ -1,8 +1,11 @@
 package morphling
 
 import (
+	"context"
 	"database/sql"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
@@ -13,7 +16,7 @@ var (
 // and replica as slave database with loadbalancer
 type DB struct {
 	// main is master physical database
-	main    *sql.DB
+	main *sql.DB
 
 	// replica can be a slave physical database, but for more than 1 slave replica
 	// you can put loadbalancer on top of your replica sets that handle the load
@@ -107,6 +110,13 @@ func (m *DB) Prepare(query string) (*sql.Stmt, error) {
 // the driver.
 func (m *DB) Begin() (*sql.Tx, error) {
 	return m.main.Begin()
+}
+
+// BeginTx starts a transaction.
+// The provided context is used until the transaction is committed or rolled back. If the context is canceled, the sql package will roll back the transaction. Tx.Commit will return an error if the context provided to BeginTx is canceled.
+// The provided TxOptions is optional and may be nil if defaults should be used. If a non-default isolation level is used that the driver doesn't support, an error will be returned.
+func (m *DB) BeginTx(ctx context.Context, opts *sql.TxOptions) (*sql.Tx, error) {
+	return m.main.BeginTx(ctx, opts)
 }
 
 // SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
