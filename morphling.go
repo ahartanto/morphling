@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
