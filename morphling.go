@@ -89,6 +89,19 @@ func (m *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	return m.replica.Query(query, args...)
 }
 
+// QueryRowMaster executes a query from master DB that is expected to return at most one row.
+// QueryRow always returns a non-nil value. Errors are deferred until
+// Row's Scan method is called.
+func (m *DB) QueryRowMaster(query string, args ...interface{}) *sql.Row {
+	return m.main.QueryRow(query, args...)
+}
+
+// QueryMaster executes a query from master DB that returns rows, typically a SELECT.
+// The args are for any placeholder parameters in the query.
+func (m *DB) QueryMaster(query string, args ...interface{}) (*sql.Rows, error) {
+	return m.main.Query(query, args...)
+}
+
 // Exec executes a query without returning any rows.
 // The args are for any placeholder parameters in the query.
 func (m *DB) Exec(query string, args ...interface{}) (sql.Result, error) {
