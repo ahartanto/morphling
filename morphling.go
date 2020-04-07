@@ -76,11 +76,34 @@ func (m *DB) Ping() error {
 	return nil
 }
 
+// PingContext verifies connection to all database is still alive,
+// establishing a connection if necessary.
+func (m *DB) PingContext(ctx context.Context) error {
+	err := m.main.PingContext(ctx)
+	if err != nil {
+		return err
+	}
+
+	err = m.replica.PingContext(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // QueryRow executes a query that is expected to return at most one row.
 // QueryRow always returns a non-nil value. Errors are deferred until
 // Row's Scan method is called.
 func (m *DB) QueryRow(query string, args ...interface{}) *sql.Row {
 	return m.replica.QueryRow(query, args...)
+}
+
+// QueryRowContext executes a query that is expected to return at most one row.
+// QueryRow always returns a non-nil value. Errors are deferred until
+// Row's Scan method is called.
+func (m *DB) QueryRowContext(ctx context.Context, query string, args ...interface{}) *sql.Row {
+	return m.replica.QueryRowContext(ctx, query, args...)
 }
 
 // Query executes a query that returns rows, typically a SELECT.
@@ -89,10 +112,22 @@ func (m *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	return m.replica.Query(query, args...)
 }
 
+// QueryContext executes a query with a context that returns rows, typically a SELECT.
+// The args are for any placeholder parameters in the query.
+func (m *DB) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
+	return m.replica.QueryContext(ctx, query, args...)
+}
+
 // Exec executes a query without returning any rows.
 // The args are for any placeholder parameters in the query.
 func (m *DB) Exec(query string, args ...interface{}) (sql.Result, error) {
 	return m.main.Exec(query, args...)
+}
+
+// ExecContext executes a query without returning any rows.
+// The args are for any placeholder parameters in the query.
+func (m *DB) ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
+	return m.main.ExecContext(ctx, query, args...)
 }
 
 // Prepare creates a prepared statement for later queries or executions.
