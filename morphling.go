@@ -22,6 +22,16 @@ type DB struct {
 	replica *sql.DB
 }
 
+// Returns the underlying *sql.DB associated with the main instance
+func (db *DB) Main() *sql.DB {
+	return db.main
+}
+
+// Returns the underlying *sql.DB associated with the replica instance
+func (db *DB) Replica() *sql.DB {
+	return db.replica
+}
+
 // Open opens master and slave database connection
 func Open(driverName, dataSourceMainStr, dataSourceReplicaStr string) (*DB, error) {
 	Morphling := DB{}
