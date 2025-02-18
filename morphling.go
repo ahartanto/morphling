@@ -83,10 +83,20 @@ func (m *DB) QueryRow(query string, args ...interface{}) *sql.Row {
 	return m.replica.QueryRow(query, args...)
 }
 
+// QueryRowContext executes a query that is expected to return at most one row.
+func (m *DB) QueryRowContext(ctx context.Context, query string, args ...interface{}) *sql.Row {
+	return m.replica.QueryRowContext(ctx, query, args...)
+}
+
 // Query executes a query that returns rows, typically a SELECT.
 // The args are for any placeholder parameters in the query.
 func (m *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	return m.replica.Query(query, args...)
+}
+
+// QueryContext executes a query that returns rows, typically a SELECT.
+func (m *DB) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
+	return m.replica.QueryContext(ctx, query, args...)
 }
 
 // Exec executes a query without returning any rows.
